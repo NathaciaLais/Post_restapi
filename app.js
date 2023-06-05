@@ -1,34 +1,42 @@
 const express = require("express");
 const app = express();
-const mongoose = require('mongoose')
-const bodyParser= require('body-parser')
-const cors = require('cors')
-require('dotenv/config')
+const mongoose = require("mongoose");
+const bodyParser = require('body-parser')
+const cors = require('cors');
+
+require('dotenv').config()
 
 app.use(bodyParser.urlencoded({
-  extended:true
+  extended: true
 }));
 app.use(bodyParser.json());
 app.use(cors())
+
+//import routes
+const authRoutes = require('./routes/auth')
+const postRoutes = require('./routes/post')
+
+app.use('/auth', authRoutes)
+app.use('/post', postRoutes)
+
 app.get("/", (req, res) => {
-  res.send("Hello World3!");
+  res.send("HALLO MAS BRO");
 })
 
-mongoose.connect(process.env.DB_CONNECTION,{
+mongoose.connect(process.env.DB_CONNECTION, {
   useNewUrlParser: true,
-  useUnifiedTopology : true
+  useUnifiedTopology: true
 })
 
 let db = mongoose.connection
 
-// handle error
-db.on('error', console.error.bind(console, 'Error establishing a database connection'))
-
-// handle success
-db.once('open',() =>{
-  console.log('database is connected')
+//handel error
+db.on('error', console.error.bind(console, 'Error Establishing Database Connection'))
+//handel sukses
+db.once('open', () => {
+  console.log('Database Is Connected');
 })
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-})
+  console.log(`Server Running on port ${process.env.PORT}`);
+});
